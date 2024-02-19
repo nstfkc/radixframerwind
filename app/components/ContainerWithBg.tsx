@@ -2,7 +2,7 @@ import { PropsWithChildren } from "react";
 
 export const ContainerWithBg = (props: PropsWithChildren) => {
   return (
-    <div className="relative w-full h-[200px] rounded-2xl overflow-hidden shadow-md">
+    <div className="relative w-full h-[200px] rounded-t-2xl overflow-hidden shadow-md">
       <div
         style={{
           position: "absolute",

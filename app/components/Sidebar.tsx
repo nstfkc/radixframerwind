@@ -5,6 +5,26 @@ const sections = [
     label: "Dialog",
     id: "dialog",
   },
+  {
+    label: "Accordion",
+    id: "accordion",
+  },
+  {
+    label: "Alert",
+    id: "alert",
+  },
+  {
+    label: "Collapsible",
+    id: "collapsible",
+  },
+  {
+    label: "Dropdown Menu",
+    id: "dropdown-menu",
+  },
+  {
+    label: "Popover",
+    id: "popover",
+  },
 ];
 
 export const Sidebar = () => {

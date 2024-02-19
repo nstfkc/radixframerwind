@@ -8,9 +8,11 @@ import {
   Overlay,
   Title,
   Description,
+  Close,
 } from "@radix-ui/react-dialog";
 import {
   motion,
+  useMotionTemplate,
   useMotionValueEvent,
   useSpring,
   useTransform,
@@ -41,7 +43,7 @@ export const Dialog = (
   });
 
   const opacity = useTransform(spring, [0, 100], [0, 1]);
-  const top = useTransform(spring, [0, 100], [`60%`, `50%`]);
+  const scale = useTransform(spring, [0, 100], [0.95, 1]);
 
   useMotionValueEvent(opacity, "change", (latest) => {
     if (latest === 0) {
@@ -74,23 +76,34 @@ export const Dialog = (
           <Overlay asChild>
             <motion.div
               style={{ opacity }}
-              className="fixed inset-0 bg-black/10"
+              className="fixed inset-0 bg-black/20"
             />
           </Overlay>
           <Content asChild>
-            <motion.div
-              style={{ opacity, top: top }}
-              className="fixed bg-white translate-y-[-50%] left-[50%] translate-x-[-50%] rounded-xl p-6"
-            >
-              <Title asChild={typeof title !== "string"}>{title}</Title>
-              <Description asChild={typeof description !== "string"}>
-                {description}
-              </Description>
-              {children}
-            </motion.div>
+            <div className="fixed z-[9999] top-[40%] translate-y-[-50%] left-[50%] translate-x-[-50%]">
+              <motion.div
+                layout
+                style={{
+                  opacity,
+                  scale,
+                }}
+                className="bg-white rounded-xl p-6"
+              >
+                <Title asChild={typeof title !== "string"}>{title}</Title>
+                <Description asChild={typeof description !== "string"}>
+                  {description}
+                </Description>
+                {children}
+                <Close className="absolute top-2 right-2 p-1" asChild>
+                  <button>&#x2715;</button>
+                </Close>
+              </motion.div>
+            </div>
           </Content>
         </Portal>
       </Root>
     </div>
   );
 };
+
+export const DialogClose = Close;

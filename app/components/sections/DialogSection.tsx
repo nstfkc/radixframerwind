@@ -1,9 +1,14 @@
+"use client";
+
 import { PropsWithChildren } from "react";
 import { Button } from "../Button";
 import { ContainerWithBg } from "../ContainerWithBg";
-import { Dialog } from "../Dialog";
+import { Dialog, DialogClose } from "../Dialog";
+import { CopyButton } from "../CopyButton";
 
-export const DialogSection = (props: PropsWithChildren) => {
+export const DialogSection = (
+  props: PropsWithChildren<{ sourceCode: string }>
+) => {
   return (
     <section id="#dialog">
       <ContainerWithBg>
@@ -24,11 +29,16 @@ export const DialogSection = (props: PropsWithChildren) => {
               ullamcorper eget nulla facilisi etiam dignissim diam quis enim
               lobortis scelerisque fermentum?
             </div>
+            <DialogClose asChild>
+              <Button>Close</Button>
+            </DialogClose>
           </Dialog>
         </div>
       </ContainerWithBg>
-      <div>
-        <div>Code</div>
+      <div className="relative">
+        <div className="absolute right-0 top-0 p-4">
+          <CopyButton content={props.sourceCode} />
+        </div>
         <div>{props.children}</div>
       </div>
     </section>

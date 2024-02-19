@@ -12,28 +12,19 @@ import {
 } from "@radix-ui/react-dialog";
 import {
   motion,
-  useMotionTemplate,
   useMotionValueEvent,
   useSpring,
   useTransform,
 } from "framer-motion";
-import { PropsWithChildren, ReactNode, useEffect, useState } from "react";
+import { PropsWithChildren, useEffect, useState } from "react";
 
 export const Dialog = (
   props: PropsWithChildren<{
     initiallyOpen?: boolean;
-    title: JSX.Element | string;
-    description: JSX.Element | string;
-    trigger: ReactNode;
+    trigger: JSX.Element | string;
   }>
 ) => {
-  const {
-    children,
-    trigger,
-    description,
-    title,
-    initiallyOpen = false,
-  } = props;
+  const { children, trigger, initiallyOpen = false } = props;
 
   const [open, setOpen] = useState(false);
 
@@ -42,10 +33,11 @@ export const Dialog = (
     damping: 30,
   });
 
+  const control = useTransform(spring, [0, 100], [0, 100]);
   const opacity = useTransform(spring, [0, 100], [0, 1]);
   const scale = useTransform(spring, [0, 100], [0.95, 1]);
 
-  useMotionValueEvent(opacity, "change", (latest) => {
+  useMotionValueEvent(control, "change", (latest) => {
     if (latest === 0) {
       setOpen(false);
     }
@@ -71,32 +63,25 @@ export const Dialog = (
           }
         }}
       >
-        <Trigger asChild>{trigger}</Trigger>
+        <Trigger asChild={typeof trigger !== "string"}>{trigger}</Trigger>
         <Portal>
-          <Overlay asChild>
-            <motion.div
-              style={{ opacity }}
-              className="fixed inset-0 bg-black/20"
-            />
-          </Overlay>
           <Content asChild>
-            <div className="fixed z-[9999] top-[40%] translate-y-[-50%] left-[50%] translate-x-[-50%]">
+            <div className="fixed w-full h-full inset-0 z-[9999] flex items-center justify-center">
+              <Overlay asChild>
+                <motion.div
+                  style={{ opacity }}
+                  onClick={() => spring.set(0)}
+                  className="fixed inset-0 z-[-1] bg-black/40 backdrop-blur-[2px]"
+                />
+              </Overlay>
               <motion.div
                 layout
                 style={{
                   opacity,
                   scale,
                 }}
-                className="bg-white rounded-xl p-6"
               >
-                <Title asChild={typeof title !== "string"}>{title}</Title>
-                <Description asChild={typeof description !== "string"}>
-                  {description}
-                </Description>
                 {children}
-                <Close className="absolute top-2 right-2 p-1" asChild>
-                  <button>&#x2715;</button>
-                </Close>
               </motion.div>
             </div>
           </Content>
@@ -107,3 +92,6 @@ export const Dialog = (
 };
 
 export const DialogClose = Close;
+export const DialogTrigger = Trigger;
+export const DialogTitle = Title;
+export const DialogDescription = Description;
